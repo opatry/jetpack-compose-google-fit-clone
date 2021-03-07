@@ -1,0 +1,47 @@
+<!--
+  Copyright (c) 2021 Olivier Patry
+
+  Permission is hereby granted, free of charge, to any person obtaining
+  a copy of this software and associated documentation files (the "Software"),
+  to deal in the Software without restriction, including without limitation
+  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  and/or sell copies of the Software, and to permit persons to whom the Software
+  is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<resources>
+    <string name="app_name">Compose Fit</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_journal">Journal</string>
+    <string name="nav_profile">Profile</string>
+    <string name="metric_legend_heart_points">Heart pts</string>
+    <string name="home_toolbar_more_info_action">More information about metrics</string>
+    <string name="profile_switch">Switch to another profile</string>
+    <string name="home_card_daily_goals_title">Your daily goals</string>
+    <string name="home_card_weekly_target_title">Your weekly target</string>
+    <string name="home_card_sleep_duration_title">Sleep duration</string>
+    <string name="home_card_bedtime_schedule_title">Bedtime schedule</string>
+    <string name="home_card_heart_points_title">Heart Points</string>
+    <string name="home_card_steps_title">Steps</string>
+    <string name="home_card_heart_rate_title">Heart rate</string>
+    <string name="metric_summary_more_details">More metric details</string>
+    <string name="home_fab_speed_dial_track_workout">Track workout</string>
+    <string name="home_fab_speed_dial_add_weight">Add weight</string>
+    <string name="home_fab_speed_dial_add_activity">Add activity</string>
+    <string name="home_fab_speed_dial_add_blood_pressure">Add blood pressure</string>
+    <string name="home_fab_content_description">Add metric</string>
+    <string name="home_card_weight_title">Weight</string>
+    <string name="metric_legend_steps">Steps</string>
+    <string name="profile_toolbar_refresh_action">Refresh</string>
+</resources>
