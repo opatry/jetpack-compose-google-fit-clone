@@ -2,7 +2,7 @@
 
 # Compose Fit
 
-This application is a toy project aiming at replicating the [❤️ Google Fit](https://www.google.com/fit/) application UI using Jetpack Compose.
+This application is a toy project aiming at replicating the [💚 Google Fit](https://www.google.com/fit/) application UI using [🚀 Jetpack Compose](https://developer.android.com/jetpack/compose).
 
 
 ## License
