@@ -64,7 +64,7 @@ fun MetricSummaryCard(color: Color, title: String, onCardClick: () -> Unit) {
             Row {
                 // FIXME fill remaining space once icon is laid out
                 Text(title,
-                    Modifier.fillMaxWidth(.9f),
+                    Modifier.weight(1f),
                     style = typography.subtitle2
                 )
                 // TODO right aligned
