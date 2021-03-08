@@ -23,14 +23,12 @@
 package net.opatry.composefit.ui.journal
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -39,8 +37,6 @@ import net.opatry.composefit.model.UserProfile
 import net.opatry.composefit.ui.component.FitListHeader
 import net.opatry.composefit.ui.component.TweakableProgressIndicator
 import net.opatry.composefit.ui.journal.component.FitActivityItem
-import net.opatry.composefit.ui.journal.component.JournalToolbar
-import net.opatry.composefit.ui.theme.typography
 import java.text.SimpleDateFormat
 import kotlin.time.ExperimentalTime
 
@@ -54,6 +50,9 @@ fun JournalScreen(userProfile: UserProfile, activities: List<FitActivity>, isRef
                     .fillMaxWidth()
                     .height(1.dp)
             )
+        } else {
+            // avoids content moving when progress indicator appears/disappears
+            Spacer(Modifier.height(1.dp))
         }
 
         LazyColumn(

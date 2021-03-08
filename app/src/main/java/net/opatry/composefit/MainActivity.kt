@@ -48,11 +48,16 @@ import androidx.compose.material.icons.outlined.Straighten
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.opatry.composefit.model.FitActivity
 import net.opatry.composefit.model.Metric
 import net.opatry.composefit.model.UserProfile
@@ -78,6 +83,7 @@ import net.opatry.composefit.ui.theme.FitPurple
 import net.opatry.composefit.ui.theme.FitRed
 import net.opatry.composefit.ui.theme.MyTheme
 import java.util.Date
+import kotlin.random.Random
 import kotlin.time.ExperimentalTime
 import kotlin.time.hours
 import kotlin.time.minutes
@@ -148,11 +154,13 @@ fun ComposeFitApp(
     otherMetrics: List<Pair<Color, Int>>,
     activities: List<FitActivity>
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     val (selectedTab, setSelectedTab) = remember { mutableStateOf(FitTabs.Home) }
     val tabs = FitTabs.values()
 
     val (profileName, profilePictureUrl) = userProfile
-    val isRefreshing = true
+    val (isJournalRefreshing, setJournalRefreshing) = remember { mutableStateOf(false) }
 
     val (showProfileSwitchDialog, toggleProfileSwitchDialog) = remember { mutableStateOf(false) }
     ProfileSwitchDialog(showProfileSwitchDialog, toggleProfileSwitchDialog)
@@ -166,7 +174,22 @@ fun ComposeFitApp(
                     // FIXME make HomeToolbar disappear on scroll
                     FitTabs.Home -> HomeToolbar(profilePictureUrl, profileName, onUserProfileClick)
                     // FIXME make JournalToolbar lift on scroll
-                    FitTabs.Journal -> JournalToolbar(profilePictureUrl, profileName, isRefreshing, onUserProfileClick)
+                    FitTabs.Journal -> JournalToolbar(
+                        profilePictureUrl,
+                        profileName,
+                        !isJournalRefreshing,
+                        onRefreshClick = {
+                            coroutineScope.launch {
+                            setJournalRefreshing(true)
+                                // Fake remote call to mimic refresh
+                                withContext(Dispatchers.IO) {
+                                    delay(Random.nextLong(200, 5000))
+                                }
+                                setJournalRefreshing(false)
+                            }
+                        },
+                        onUserProfileClick
+                    )
                     // FIXME make ProfileToolbar lift on scroll
                     FitTabs.Profile -> ProfileToolbar(profilePictureUrl, profileName, onUserProfileClick)
                 }
@@ -211,7 +234,7 @@ fun ComposeFitApp(
                         secondaryMetrics,
                         otherMetrics
                     )
-                    FitTabs.Journal -> JournalScreen(userProfile, activities, isRefreshing)
+                    FitTabs.Journal -> JournalScreen(userProfile, activities, isJournalRefreshing)
                     FitTabs.Profile -> {
                         // userProfile.parameters
                         val parameters = listOf(

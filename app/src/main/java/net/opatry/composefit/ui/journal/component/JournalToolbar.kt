@@ -22,12 +22,16 @@
 
 package net.opatry.composefit.ui.journal.component
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Loop
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import net.opatry.composefit.R
 import net.opatry.composefit.ui.component.FitToolbar
@@ -37,8 +41,16 @@ fun JournalToolbar(
     profilePictureUrl: String,
     profileName: String,
     refreshEnabled: Boolean,
+    onRefreshClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
+    val animatedAlpha by animateFloatAsState(
+        when {
+            refreshEnabled -> 1f
+            else -> ContentAlpha.disabled
+        }
+    )
+
     // TODO lift on scroll + Toolbar title transition
     FitToolbar(
         profilePictureUrl = profilePictureUrl,
@@ -48,14 +60,13 @@ fun JournalToolbar(
     ) {
         IconButton(
             enabled = refreshEnabled,
-            onClick = {
-                // TODO open dialog onClick
-            }
+            onClick = onRefreshClick
         ) {
             Icon(
                 Icons.Outlined.Loop,
                 stringResource(R.string.profile_toolbar_refresh_action),
-                tint = LocalContentColor.current
+                tint =
+                LocalContentColor.current.copy(alpha = animatedAlpha)
             )
         }
     }
