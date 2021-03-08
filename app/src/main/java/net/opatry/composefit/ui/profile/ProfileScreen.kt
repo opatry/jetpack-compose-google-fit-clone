@@ -22,11 +22,69 @@
 
 package net.opatry.composefit.ui.profile
 
-import androidx.compose.material.Text
+import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import net.opatry.composefit.model.UserProfile
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import net.opatry.composefit.R
+import net.opatry.composefit.model.Metric
+import net.opatry.composefit.ui.component.FitListHeader
+import java.util.Date
+
+enum class Gender {
+    Male,
+    Female,
+}
+
+sealed class ProfileParameter {
+    data class ActivityGoals(val step: Metric.Step, val heartPoint: Metric.HeartPoint) : ProfileParameter()
+    data class BedtimeSchedule(val begin: Int/*FIXME Time()*/, val end: Int/*FIXME Time()*/) : ProfileParameter()
+    data class About(val gender: Gender, val birthday: Date, val weight: Metric.Weight, val height: Metric.Distance) : ProfileParameter()
+}
+
+@get:StringRes
+val ProfileParameter.labelRes
+    get() = when (this) {
+        is ProfileParameter.ActivityGoals -> R.string.profile_parameters_activity_goals
+        is ProfileParameter.BedtimeSchedule -> R.string.profile_parameters_bedtime_schedule
+        is ProfileParameter.About -> R.string.profile_parameters_about
+    }
 
 @Composable
-fun ProfileScreen(userProfile: UserProfile) {
-    Text("PROFILE")
+fun ProfileScreen(profileParameters: List<ProfileParameter>) {
+    // profileParameters.groupBy {}
+    val groups = mutableMapOf<String, List<ProfileParameter>>().apply {
+        profileParameters.forEach { profileParameter ->
+            this += stringResource(profileParameter.labelRes) to listOf(profileParameter)
+        }
+    }
+    LazyColumn(
+        Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+    ) {
+        groups.forEach { (header, parameters) ->
+            item {
+                FitListHeader(header)
+            }
+            items(parameters) { param ->
+                // when (param) {
+                //     is ProfileParameter.ActivityGoals
+                //     is ProfileParameter.BedtimeSchedule
+                //     is ProfileParameter.ActivityGoals
+                // }
+                Row(Modifier.padding(vertical = 16.dp, horizontal = 24.dp)) {
+                    TextField(value = "TODO", onValueChange = { /*TODO*/ })
+                }
+            }
+        }
+    }
 }

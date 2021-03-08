@@ -20,32 +20,27 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.composefit.model
+package net.opatry.composefit.ui.component
 
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Divider
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
-sealed class Metric {
-    data class HeartPoint(val score: Int) : Metric()
-    data class Step(val count: Int) : Metric()
-    data class Sleep @ExperimentalTime constructor(val totalSleepDuration: Duration, val deepSleepDuration: Duration) : Metric()
-    data class HeartRate(val lastBPM: Int) : Metric()
-    data class Weight(val gram: Int) : Metric()
-    data class Calorie(val value: Int) : Metric()
-    data class Distance(val meter: Int) : Metric() {
-        operator fun plus(other: Metric.Distance): Metric.Distance =
-            Metric.Distance(meter + other.meter)
+@Composable
+fun FitListHeader(label: String) {
+    // TODO shouldn't be a simple label but another composable with rich content
+    Column {
+        Text(
+            label,
+            Modifier
+                .padding(vertical = 16.dp, horizontal = 24.dp)
+                .fillMaxWidth()
+        )
+        Divider()
     }
-
-    data class Move(val moveMin: Int) : Metric()
 }
-
-val Int.heartPoints get() = Metric.HeartPoint(this)
-
-val Int.km get() = Metric.Distance(this * 1000)
-val Int.meters get() = Metric.Distance(this)
-val Int.cm get() = Metric.Distance(this / 100)
-
-val Int.kg get() = Metric.Weight(this * 1000)
-val Float.kg get() = Metric.Weight((this * 1000).toInt())
-val Int.grams get() = Metric.Weight(this)

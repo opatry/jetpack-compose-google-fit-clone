@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.opatry.composefit.model.FitActivity
 import net.opatry.composefit.model.UserProfile
+import net.opatry.composefit.ui.component.FitListHeader
 import net.opatry.composefit.ui.component.TweakableProgressIndicator
 import net.opatry.composefit.ui.journal.component.FitActivityItem
 import net.opatry.composefit.ui.journal.component.JournalToolbar
@@ -65,17 +66,9 @@ fun JournalScreen(userProfile: UserProfile, activities: List<FitActivity>, isRef
                 item {
                     // TODO retrieve total steps & heart points for such group
                     // TODO display MetricProgressIndicator
-                    Column {
-                        // FIXME idiomatic kotlin date formatting
-                        val dateFormat = SimpleDateFormat("E, LLL d")
-                        Text(
-                            dateFormat.format(header),
-                            Modifier
-                                .padding(vertical = 16.dp, horizontal = 24.dp)
-                                .fillMaxWidth()
-                        )
-                        Divider()
-                    }
+                    // FIXME idiomatic kotlin date formatting
+                    val dateFormat = SimpleDateFormat("E, LLL d")
+                    FitListHeader(dateFormat.format(header))
                 }
                 items(activities) { activity ->
                     FitActivityItem(activity) {

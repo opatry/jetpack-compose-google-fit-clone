@@ -45,4 +45,9 @@
     <string name="metric_legend_steps">Steps</string>
     <string name="profile_toolbar_refresh_action">Refresh</string>
     <string name="screen_title_journal">Journal</string>
+    <string name="profile_toolbar_settings_action">Settings</string>
+    <string name="screen_title_profile">Profile</string>
+    <string name="profile_parameters_activity_goals">Activity goals</string>
+    <string name="profile_parameters_bedtime_schedule">Bedtime schedule</string>
+    <string name="profile_parameters_about">About you</string>
 </resources>

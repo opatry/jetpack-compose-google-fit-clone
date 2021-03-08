@@ -56,7 +56,9 @@ import androidx.compose.ui.unit.dp
 import net.opatry.composefit.model.FitActivity
 import net.opatry.composefit.model.Metric
 import net.opatry.composefit.model.UserProfile
+import net.opatry.composefit.model.cm
 import net.opatry.composefit.model.heartPoints
+import net.opatry.composefit.model.kg
 import net.opatry.composefit.model.km
 import net.opatry.composefit.model.meters
 import net.opatry.composefit.ui.component.AddActivityFloatingActionButton
@@ -64,7 +66,10 @@ import net.opatry.composefit.ui.home.HomeScreen
 import net.opatry.composefit.ui.home.component.HomeToolbar
 import net.opatry.composefit.ui.journal.JournalScreen
 import net.opatry.composefit.ui.journal.component.JournalToolbar
+import net.opatry.composefit.ui.profile.Gender
+import net.opatry.composefit.ui.profile.ProfileParameter
 import net.opatry.composefit.ui.profile.ProfileScreen
+import net.opatry.composefit.ui.profile.component.ProfileToolbar
 import net.opatry.composefit.ui.theme.FitBlue
 import net.opatry.composefit.ui.theme.FitDarkBlue
 import net.opatry.composefit.ui.theme.FitGreen
@@ -162,6 +167,8 @@ fun ComposeFitApp(
                     FitTabs.Home -> HomeToolbar(profilePictureUrl, profileName, onUserProfileClick)
                     // FIXME make JournalToolbar lift on scroll
                     FitTabs.Journal -> JournalToolbar(profilePictureUrl, profileName, isRefreshing, onUserProfileClick)
+                    // FIXME make ProfileToolbar lift on scroll
+                    FitTabs.Profile -> ProfileToolbar(profilePictureUrl, profileName, onUserProfileClick)
                 }
             },
             bottomBar = {
@@ -205,7 +212,15 @@ fun ComposeFitApp(
                         otherMetrics
                     )
                     FitTabs.Journal -> JournalScreen(userProfile, activities, isRefreshing)
-                    FitTabs.Profile -> ProfileScreen(userProfile)
+                    FitTabs.Profile -> {
+                        // userProfile.parameters
+                        val parameters = listOf(
+                            ProfileParameter.ActivityGoals(Metric.Step(7000), Metric.HeartPoint(10)),
+                            ProfileParameter.BedtimeSchedule(23, 8),
+                            ProfileParameter.About(Gender.Male, Date(1985, 0, 31), 82.2f.kg, 185.cm),
+                        )
+                        ProfileScreen(parameters)
+                    }
                 }
             }
         }
