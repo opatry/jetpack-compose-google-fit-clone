@@ -28,20 +28,23 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import net.opatry.composefit.R
 import net.opatry.composefit.ui.component.FitToolbar
 
 @Composable
 fun HomeToolbar(profilePictureUrl: String, profileName: String, onProfileClick: () -> Unit) {
+    val (showInfoDialog, toggleInfoDialog) = remember { mutableStateOf(false) }
+    MainMetricInfoDialog(showInfoDialog, toggleInfoDialog)
+
     FitToolbar(
         profilePictureUrl = profilePictureUrl,
         profileName = profileName,
         onProfileClick = onProfileClick
     ) {
-        IconButton(onClick = {
-            // TODO open info dialog
-        }) {
+        IconButton(onClick = { toggleInfoDialog(true) }) {
             Icon(
                 Icons.Outlined.Info,
                 stringResource(R.string.home_toolbar_more_info_action),
