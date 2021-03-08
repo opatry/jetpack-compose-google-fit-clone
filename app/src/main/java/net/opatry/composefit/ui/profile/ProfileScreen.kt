@@ -22,7 +22,6 @@
 
 package net.opatry.composefit.ui.profile
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,36 +30,27 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import net.opatry.composefit.R
-import net.opatry.composefit.model.Metric
+import androidx.lifecycle.viewmodel.compose.viewModel
+import net.opatry.composefit.model.ProfileParameter
+import net.opatry.composefit.model.UserProfile
+import net.opatry.composefit.ui.ProfileViewModel
+import net.opatry.composefit.ui.ProfileViewModelFactory
 import net.opatry.composefit.ui.component.FitListHeader
-import java.util.Date
-
-enum class Gender {
-    Male,
-    Female,
-}
-
-sealed class ProfileParameter {
-    data class ActivityGoals(val step: Metric.Step, val heartPoint: Metric.HeartPoint) : ProfileParameter()
-    data class BedtimeSchedule(val begin: Int/*FIXME Time()*/, val end: Int/*FIXME Time()*/) : ProfileParameter()
-    data class About(val gender: Gender, val birthday: Date, val weight: Metric.Weight, val height: Metric.Distance) : ProfileParameter()
-}
-
-@get:StringRes
-val ProfileParameter.labelRes
-    get() = when (this) {
-        is ProfileParameter.ActivityGoals -> R.string.profile_parameters_activity_goals
-        is ProfileParameter.BedtimeSchedule -> R.string.profile_parameters_bedtime_schedule
-        is ProfileParameter.About -> R.string.profile_parameters_about
-    }
+import net.opatry.composefit.ui.util.labelRes
+import kotlin.time.ExperimentalTime
 
 @Composable
-fun ProfileScreen(profileParameters: List<ProfileParameter>) {
-    // profileParameters.groupBy {}
+@ExperimentalTime
+fun ProfileScreen(userProfile: UserProfile) {
+    val viewModel = viewModel<ProfileViewModel>(factory = ProfileViewModelFactory(userProfile))
+    val profileParameters by viewModel.parameters.observeAsState(listOf())
+
+    // FIXME profileParameters.groupBy {}
     val groups = mutableMapOf<String, List<ProfileParameter>>().apply {
         profileParameters.forEach { profileParameter ->
             this += stringResource(profileParameter.labelRes) to listOf(profileParameter)

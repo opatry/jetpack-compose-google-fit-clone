@@ -46,90 +46,55 @@ import androidx.compose.material.icons.outlined.MonitorWeight
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Straighten
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import net.opatry.composefit.model.FitActivity
-import net.opatry.composefit.model.Metric
+import net.opatry.composefit.data.ProfileRepository
 import net.opatry.composefit.model.UserProfile
-import net.opatry.composefit.model.cm
-import net.opatry.composefit.model.heartPoints
-import net.opatry.composefit.model.kg
-import net.opatry.composefit.model.km
-import net.opatry.composefit.model.meters
 import net.opatry.composefit.ui.component.AddActivityFloatingActionButton
 import net.opatry.composefit.ui.component.ProfileSwitchDialog
 import net.opatry.composefit.ui.home.HomeScreen
 import net.opatry.composefit.ui.home.component.HomeToolbar
 import net.opatry.composefit.ui.journal.JournalScreen
 import net.opatry.composefit.ui.journal.component.JournalToolbar
-import net.opatry.composefit.ui.profile.Gender
-import net.opatry.composefit.ui.profile.ProfileParameter
 import net.opatry.composefit.ui.profile.ProfileScreen
 import net.opatry.composefit.ui.profile.component.ProfileToolbar
-import net.opatry.composefit.ui.theme.FitBlue
-import net.opatry.composefit.ui.theme.FitDarkBlue
-import net.opatry.composefit.ui.theme.FitGreen
-import net.opatry.composefit.ui.theme.FitPurple
-import net.opatry.composefit.ui.theme.FitRed
 import net.opatry.composefit.ui.theme.MyTheme
-import java.util.Date
 import kotlin.random.Random
 import kotlin.time.ExperimentalTime
-import kotlin.time.hours
-import kotlin.time.minutes
-import kotlin.time.seconds
+
+val FakeProfileRepository = ProfileRepository()
 
 class MainActivity : AppCompatActivity() {
     @ExperimentalTime
+    private val userProfile = MutableLiveData<UserProfile>()
+    @ExperimentalTime
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val repository = FakeProfileRepository
+        lifecycleScope.launch(Dispatchers.Main) {
+            userProfile.value = repository.getUserProfile("fake@gmail.com")
+        }
+
         setContent {
-            MyTheme {
-                ComposeFitApp(
-                    userProfile = UserProfile(
-                        name = "Random",
-                        pictureUrl = "https://upload.wikimedia.org/wikipedia/commons/b/b4/Wikipe-tan_avatar.png"
-                    ),
-                    steps = Metric.Step(10_884),
-                    heartPoints = Metric.HeartPoint(85),
-                    secondaryMetrics = listOf(
-                        Metric.Calorie(1753),
-                        Metric.Distance(9080),
-                        Metric.Move(98),
-                        Metric.Sleep(8.hours + 41.minutes, 0.seconds)
-                    ),
-                    otherMetrics = listOf(
-                        FitBlue to R.string.home_card_daily_goals_title,
-                        FitGreen to R.string.home_card_weekly_target_title,
-                        FitPurple to R.string.home_card_sleep_duration_title,
-                        FitPurple to R.string.home_card_bedtime_schedule_title,
-                        FitGreen to R.string.home_card_heart_points_title,
-                        FitDarkBlue to R.string.home_card_steps_title,
-                        FitRed to R.string.home_card_heart_rate_title,
-                        FitBlue to R.string.home_card_weight_title,
-                    ),
-                    activities = listOf(
-                        FitActivity.Walk(Date(2021, 2, 20), "Walk1", "Mi Fit", 800.meters, 19.minutes),
-                        FitActivity.Run(Date(2021, 2, 20), "Run1", "Mi Fit", 5.km + 504.meters, 19.minutes, 20.heartPoints),
-                        FitActivity.Sleep(Date(2021, 2, 20), "Sleep", "Mi Fit", Metric.Sleep(7.hours + 52.minutes, 50.minutes)),
-                        // ---
-                        FitActivity.Walk(Date(2021, 2, 19), "Walk1", "Mi Fit", 420.meters, 9.minutes),
-                        FitActivity.Walk(Date(2021, 2, 19), "Walk2", "Mi Fit", 35.meters, 1.minutes),
-                        FitActivity.Walk(Date(2021, 2, 19), "Walk3", "Mi Fit", 5.km + 10.meters, 40.minutes),
-                        FitActivity.Walk(Date(2021, 2, 19), "Walk4", "Mi Fit", 703.meters, 15.minutes),
-                        FitActivity.Sleep(Date(2021, 2, 19), "Sleep", "Mi Fit", Metric.Sleep(8.hours + 2.minutes, 1.hours + 30.minutes)),
-                    ) // TODO sort by date
-                )
+            val userProfile by userProfile.observeAsState(null)
+            userProfile?.let { profile ->
+                MyTheme {
+                    ComposeFitApp(profile)
+                }
             }
         }
     }
@@ -146,14 +111,7 @@ private enum class FitTabs(
 
 @Composable
 @ExperimentalTime
-fun ComposeFitApp(
-    userProfile: UserProfile,
-    steps: Metric.Step,
-    heartPoints: Metric.HeartPoint,
-    secondaryMetrics: List<Metric>,
-    otherMetrics: List<Pair<Color, Int>>,
-    activities: List<FitActivity>
-) {
+fun ComposeFitApp(userProfile: UserProfile) {
     val coroutineScope = rememberCoroutineScope()
 
     val (selectedTab, setSelectedTab) = remember { mutableStateOf(FitTabs.Home) }
@@ -227,23 +185,9 @@ fun ComposeFitApp(
         ) { innerPadding ->
             Box(Modifier.padding(innerPadding)) {
                 when (selectedTab) {
-                    FitTabs.Home -> HomeScreen(
-                        userProfile,
-                        steps,
-                        heartPoints,
-                        secondaryMetrics,
-                        otherMetrics
-                    )
-                    FitTabs.Journal -> JournalScreen(userProfile, activities, isJournalRefreshing)
-                    FitTabs.Profile -> {
-                        // userProfile.parameters
-                        val parameters = listOf(
-                            ProfileParameter.ActivityGoals(Metric.Step(7000), Metric.HeartPoint(10)),
-                            ProfileParameter.BedtimeSchedule(23, 8),
-                            ProfileParameter.About(Gender.Male, Date(1985, 0, 31), 82.2f.kg, 185.cm),
-                        )
-                        ProfileScreen(parameters)
-                    }
+                    FitTabs.Home -> HomeScreen(userProfile)
+                    FitTabs.Journal -> JournalScreen(userProfile, isJournalRefreshing)
+                    FitTabs.Profile -> ProfileScreen(userProfile)
                 }
             }
         }

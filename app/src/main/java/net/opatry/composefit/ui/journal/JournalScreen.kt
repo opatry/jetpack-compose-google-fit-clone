@@ -30,10 +30,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import net.opatry.composefit.model.FitActivity
+import androidx.lifecycle.viewmodel.compose.viewModel
 import net.opatry.composefit.model.UserProfile
+import net.opatry.composefit.ui.JournalViewModel
+import net.opatry.composefit.ui.JournalViewModelFactory
 import net.opatry.composefit.ui.component.FitListHeader
 import net.opatry.composefit.ui.component.TweakableProgressIndicator
 import net.opatry.composefit.ui.journal.component.FitActivityItem
@@ -42,7 +46,10 @@ import kotlin.time.ExperimentalTime
 
 @Composable
 @ExperimentalTime
-fun JournalScreen(userProfile: UserProfile, activities: List<FitActivity>, isRefreshing: Boolean) {
+fun JournalScreen(userProfile: UserProfile, isRefreshing: Boolean) {
+    val viewModel = viewModel<JournalViewModel>(factory = JournalViewModelFactory(userProfile))
+    val activities by viewModel.activities.observeAsState(listOf())
+
     Column {
         if (isRefreshing) {
             FitJournalRefreshIndicator(

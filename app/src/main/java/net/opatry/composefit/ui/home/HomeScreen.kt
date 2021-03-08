@@ -30,41 +30,44 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import net.opatry.composefit.model.Metric
 import net.opatry.composefit.model.UserProfile
+import net.opatry.composefit.ui.HomeViewModel
+import net.opatry.composefit.ui.HomeViewModelFactory
 import net.opatry.composefit.ui.home.component.HomeMainMetricsCircleIndicators
 import net.opatry.composefit.ui.home.component.HomeSecondaryMetricsSummary
-import net.opatry.composefit.ui.home.component.HomeToolbar
 import net.opatry.composefit.ui.home.component.MetricSummaryCard
 import kotlin.time.ExperimentalTime
 
 @Composable
 @ExperimentalTime
-fun HomeScreen(
-    userProfile: UserProfile,
-    steps: Metric.Step,
-    heartPoints: Metric.HeartPoint,
-    secondaryMetrics: List<Metric>,
-    otherMetrics: List<Pair<Color, Int>>
-) {
-    Column {
-        LazyColumn(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-        ) {
-            item {
-                HomeHeader(userProfile, steps, heartPoints, secondaryMetrics)
-            }
-            items(otherMetrics) { (color, titleRes) ->
-                MetricSummaryCard(color = color, stringResource(titleRes)) { /* TODO on card click */ }
+fun HomeScreen(userProfile: UserProfile) {
+    val viewModel = viewModel<HomeViewModel>(factory = HomeViewModelFactory(userProfile))
+    val metrics by viewModel.homeMetrics.observeAsState()
+
+    metrics?.let {
+        val (steps, heartPoints, secondaryMetrics, otherMetrics) = it
+
+        Column {
+            LazyColumn(
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+            ) {
+                item {
+                    HomeHeader(userProfile, steps, heartPoints, secondaryMetrics)
+                }
+                items(otherMetrics) { (color, titleRes) ->
+                    MetricSummaryCard(color = color, stringResource(titleRes)) { /* TODO on card click */ }
+                }
             }
         }
     }
