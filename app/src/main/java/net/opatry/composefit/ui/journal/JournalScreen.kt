@@ -46,7 +46,6 @@ import kotlin.time.ExperimentalTime
 @ExperimentalTime
 fun JournalScreen(userProfile: UserProfile, activities: List<FitActivity>) {
     Column {
-        JournalToolbar(userProfile.pictureUrl, userProfile.name) { /* TODO user profile switch dialog */ }
         // TODO transition as toolbar label on scroll
         Text("Journal", Modifier.padding(16.dp), style = typography.h4)
         // TODO gradient color progress

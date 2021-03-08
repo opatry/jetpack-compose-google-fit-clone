@@ -22,27 +22,41 @@
 
 package net.opatry.composefit.ui.journal.component
 
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Loop
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import net.opatry.composefit.R
 import net.opatry.composefit.ui.component.FitToolbar
-import net.opatry.composefit.ui.component.ToolbarIcon
 
 @Composable
-fun JournalToolbar(profilePictureUrl: String, profileName: String, onProfileClick: () -> Unit) {
+fun JournalToolbar(
+    profilePictureUrl: String,
+    profileName: String,
+    refreshEnabled: Boolean,
+    onProfileClick: () -> Unit
+) {
+    // TODO lift on scroll + Toolbar title transition
     FitToolbar(
         profilePictureUrl = profilePictureUrl,
         profileName = profileName,
+        title = stringResource(R.string.screen_title_journal),
         onProfileClick = onProfileClick
     ) {
-        // TODO make is disabled once progress is ongoing
-        ToolbarIcon(
-            Icons.Outlined.Loop,
-            stringResource(R.string.profile_toolbar_refresh_action)
+        IconButton(
+            enabled = refreshEnabled,
+            onClick = {
+                // TODO open dialog onClick
+            }
         ) {
-            // TODO open dialog onClick
+            Icon(
+                Icons.Outlined.Loop,
+                stringResource(R.string.profile_toolbar_refresh_action),
+                tint = LocalContentColor.current
+            )
         }
     }
 }

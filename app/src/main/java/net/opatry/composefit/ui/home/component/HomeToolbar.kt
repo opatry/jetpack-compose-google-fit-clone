@@ -22,25 +22,31 @@
 
 package net.opatry.composefit.ui.home.component
 
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import net.opatry.composefit.R
 import net.opatry.composefit.ui.component.FitToolbar
-import net.opatry.composefit.ui.component.ToolbarIcon
 
 @Composable
 fun HomeToolbar(profilePictureUrl: String, profileName: String, onProfileClick: () -> Unit) {
     FitToolbar(
         profilePictureUrl = profilePictureUrl,
         profileName = profileName,
-        onProfileClick = onProfileClick) {
-        ToolbarIcon(
-            Icons.Outlined.Info,
-            stringResource(R.string.home_toolbar_more_info_action)
-        ) {
+        onProfileClick = onProfileClick
+    ) {
+        IconButton(onClick = {
             // TODO open info dialog
+        }) {
+            Icon(
+                Icons.Outlined.Info,
+                stringResource(R.string.home_toolbar_more_info_action),
+                tint = LocalContentColor.current
+            )
         }
     }
 }

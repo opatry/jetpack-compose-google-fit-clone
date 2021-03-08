@@ -61,7 +61,9 @@ import net.opatry.composefit.model.km
 import net.opatry.composefit.model.meters
 import net.opatry.composefit.ui.component.AddActivityFloatingActionButton
 import net.opatry.composefit.ui.home.HomeScreen
+import net.opatry.composefit.ui.home.component.HomeToolbar
 import net.opatry.composefit.ui.journal.JournalScreen
+import net.opatry.composefit.ui.journal.component.JournalToolbar
 import net.opatry.composefit.ui.profile.ProfileScreen
 import net.opatry.composefit.ui.theme.FitBlue
 import net.opatry.composefit.ui.theme.FitDarkBlue
@@ -143,8 +145,25 @@ fun ComposeFitApp(
     val (selectedTab, setSelectedTab) = remember { mutableStateOf(FitTabs.Home) }
     val tabs = FitTabs.values()
 
+    val (showDialog, setShowDialog) =  remember { mutableStateOf(false) }
+
+    val onUserProfileClick = { setShowDialog(true) }
+
+    val isRefreshing = true
+    val (profileName, profilePictureUrl) = userProfile
+
+    // DialogDemo(showDialog, setShowDialog)
+
     Surface(color = MaterialTheme.colors.background) {
         Scaffold(
+            topBar = {
+                when (selectedTab) {
+                    // FIXME make HomeToolbar disappear on scroll
+                    FitTabs.Home -> HomeToolbar(profilePictureUrl, profileName, onUserProfileClick)
+                    // FIXME make JournalToolbar lift on scroll
+                    FitTabs.Journal -> JournalToolbar(profilePictureUrl, profileName, isRefreshing, onUserProfileClick)
+                }
+            },
             bottomBar = {
                 BottomNavigation(
                     backgroundColor = MaterialTheme.colors.surface.copy(alpha = .98f),

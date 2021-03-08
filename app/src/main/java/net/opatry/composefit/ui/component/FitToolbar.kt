@@ -22,13 +22,13 @@
 
 package net.opatry.composefit.ui.component
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -36,25 +36,36 @@ import coil.transform.CircleCropTransformation
 import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
-fun FitToolbar(profilePictureUrl: String, profileName: String, onProfileClick: () -> Unit, screenActions: @Composable () -> Unit) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp),
-        horizontalArrangement = Arrangement.End
-    ) {
-        screenActions()
-        // FIXME there is no caching it seems
-        CoilImage(
-            data = profilePictureUrl,
-            profileName,
-            Modifier
-                .clickable { onProfileClick() }
-                .size(48.dp)
-                .padding(8.dp)
-                .fillMaxHeight(),
-            requestBuilder = { transformations(CircleCropTransformation()) },
-            fadeIn = true
-        )
-    }
+fun FitToolbar(
+    profilePictureUrl: String,
+    profileName: String,
+    onProfileClick: () -> Unit,
+    title: String? = null,
+    screenActions: @Composable () -> Unit
+) {
+    // TODO lift on scroll (using a remember anim elevation value based on parent scroll?
+    TopAppBar(
+        title = {
+            if (!title.isNullOrEmpty()) {
+                Text(title)
+            }
+        },
+        backgroundColor = MaterialTheme.colors.surface,
+        elevation = 4.dp,
+        actions = {
+            screenActions()
+            IconButton(onClick = onProfileClick) {
+                CoilImage(
+                    data = profilePictureUrl,
+                    profileName,
+                    Modifier
+                        .size(48.dp)
+                        .padding(8.dp)
+                        .fillMaxHeight(),
+                    requestBuilder = { transformations(CircleCropTransformation()) },
+                    fadeIn = true
+                )
+            }
+        }
+    )
 }
