@@ -25,17 +25,18 @@ package net.opatry.composefit.ui.journal
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
-import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.opatry.composefit.model.FitActivity
 import net.opatry.composefit.model.UserProfile
+import net.opatry.composefit.ui.component.TweakableProgressIndicator
 import net.opatry.composefit.ui.journal.component.FitActivityItem
 import net.opatry.composefit.ui.journal.component.JournalToolbar
 import net.opatry.composefit.ui.theme.typography
@@ -44,12 +45,15 @@ import kotlin.time.ExperimentalTime
 
 @Composable
 @ExperimentalTime
-fun JournalScreen(userProfile: UserProfile, activities: List<FitActivity>) {
+fun JournalScreen(userProfile: UserProfile, activities: List<FitActivity>, isRefreshing: Boolean) {
     Column {
-        // TODO transition as toolbar label on scroll
-        Text("Journal", Modifier.padding(16.dp), style = typography.h4)
-        // TODO gradient color progress
-        LinearProgressIndicator(Modifier.fillMaxWidth())
+        if (isRefreshing) {
+            FitJournalRefreshIndicator(
+                Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+            )
+        }
 
         LazyColumn(
             Modifier
@@ -83,3 +87,10 @@ fun JournalScreen(userProfile: UserProfile, activities: List<FitActivity>) {
     }
 }
 
+@Composable
+fun FitJournalRefreshIndicator(modifier: Modifier) {
+    // TODO tweak what needs to be tweaked
+    //  - height
+    //  - colors
+    TweakableProgressIndicator(modifier)
+}

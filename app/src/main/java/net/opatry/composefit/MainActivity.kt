@@ -204,7 +204,7 @@ fun ComposeFitApp(
                         secondaryMetrics,
                         otherMetrics
                     )
-                    FitTabs.Journal -> JournalScreen(userProfile, activities)
+                    FitTabs.Journal -> JournalScreen(userProfile, activities, isRefreshing)
                     FitTabs.Profile -> ProfileScreen(userProfile)
                 }
             }
