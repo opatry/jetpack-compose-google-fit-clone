@@ -62,6 +62,7 @@ import net.opatry.composefit.model.kg
 import net.opatry.composefit.model.km
 import net.opatry.composefit.model.meters
 import net.opatry.composefit.ui.component.AddActivityFloatingActionButton
+import net.opatry.composefit.ui.component.ProfileSwitchDialog
 import net.opatry.composefit.ui.home.HomeScreen
 import net.opatry.composefit.ui.home.component.HomeToolbar
 import net.opatry.composefit.ui.journal.JournalScreen
@@ -150,14 +151,13 @@ fun ComposeFitApp(
     val (selectedTab, setSelectedTab) = remember { mutableStateOf(FitTabs.Home) }
     val tabs = FitTabs.values()
 
-    val (showDialog, setShowDialog) =  remember { mutableStateOf(false) }
-
-    val onUserProfileClick = { setShowDialog(true) }
-
-    val isRefreshing = true
     val (profileName, profilePictureUrl) = userProfile
+    val isRefreshing = true
 
-    // DialogDemo(showDialog, setShowDialog)
+    val (showProfileSwitchDialog, toggleProfileSwitchDialog) = remember { mutableStateOf(false) }
+    ProfileSwitchDialog(showProfileSwitchDialog, toggleProfileSwitchDialog)
+
+    val onUserProfileClick = { toggleProfileSwitchDialog(true) }
 
     Surface(color = MaterialTheme.colors.background) {
         Scaffold(
