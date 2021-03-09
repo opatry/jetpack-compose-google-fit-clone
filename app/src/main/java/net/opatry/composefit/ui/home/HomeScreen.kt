@@ -63,7 +63,7 @@ fun HomeScreen(userProfile: UserProfile) {
                     .fillMaxHeight(),
             ) {
                 item {
-                    HomeHeader(userProfile, steps, heartPoints, secondaryMetrics)
+                    HomeHeader(steps, heartPoints, secondaryMetrics)
                 }
                 items(otherMetrics) { (color, titleRes) ->
                     MetricSummaryCard(color = color, stringResource(titleRes)) { /* TODO on card click */ }
@@ -76,7 +76,6 @@ fun HomeScreen(userProfile: UserProfile) {
 @Composable
 @ExperimentalTime
 fun HomeHeader(
-    userProfile: UserProfile,
     steps: Metric.Step,
     heartPoints: Metric.HeartPoint,
     secondaryMetrics: List<Metric>
