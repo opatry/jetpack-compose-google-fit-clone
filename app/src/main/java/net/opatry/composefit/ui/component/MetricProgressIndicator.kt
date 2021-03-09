@@ -29,6 +29,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProgressIndicatorDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -46,10 +47,10 @@ fun MetricProgressIndicator(
     strokeWidth: Dp = ProgressIndicatorDefaults.StrokeWidth,
     backgroundColor: Color = color.copy(alpha = .1f)
 ) {
-    val animatedProgress = animateFloatAsState(
+    val animatedProgress by animateFloatAsState(
         targetValue = progress,
         animationSpec = tween(easing = LinearEasing)
-    ).value
+    )
     val stroke = with(LocalDensity.current) {
         Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round)
     }
