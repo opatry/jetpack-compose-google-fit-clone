@@ -30,7 +30,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import net.opatry.composefit.model.FitActivity
 import net.opatry.composefit.model.ProfileParameter
 import net.opatry.composefit.model.UserProfile
 import kotlin.time.ExperimentalTime
